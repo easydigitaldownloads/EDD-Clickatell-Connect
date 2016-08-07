@@ -38,6 +38,13 @@ if( ! class_exists( 'EDD_Clickatell_Connect' ) ) {
 
 
 		/**
+		 * @var         bool $debugging Whether or not debugging is available
+		 * @since       1.0.2
+		 */
+		public $debugging = false;
+
+
+		/**
 		 * Get active instance
 		 *
 		 * @access      public
@@ -51,6 +58,12 @@ if( ! class_exists( 'EDD_Clickatell_Connect' ) ) {
 				self::$instance->load_textdomain();
 				self::$instance->includes();
 				self::$instance->hooks();
+
+				if( class_exists( 'S214_Debug' ) ) {
+					if( edd_get_option( 'edd_clickatell_connect_enable_debug', false ) ) {
+						self::$instance->debugging = true;
+					}
+				}
 			}
 
 			return self::$instance;

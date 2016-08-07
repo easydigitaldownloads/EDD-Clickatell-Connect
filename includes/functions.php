@@ -35,7 +35,9 @@ function edd_clickatell_connect_build_sms( $payment_id ) {
 		if( substr( $session_id, 0, 3 ) === 'OK:' ) {
 			$session_id = str_replace( 'OK: ', '', $session_id );
 		} else {
-			edd_record_gateway_error( __( 'Clickatell Connect Error', 'edd-clickatell-connect' ), $session_id, 0 );
+			if( edd_getresponse()->debugging ) {
+				s214_debug_log_error( 'Connection Error', 'Failed to create a valid session: ' . $session_id, 'EDD Clickatell Connect' );
+			}
 			return;
 		}
 
@@ -111,7 +113,9 @@ function edd_clickatell_connect_send_sms( $session_id, $message ) {
 		$result        = wp_remote_retrieve_body( $result );
 
 		if( substr( $result, 0, 4 ) === 'ERR:' ) {
-			edd_record_gateway_error( __( 'Clickatell Connect Error', 'edd-clickatell-connect' ), $result, 0 );
+			if( edd_getresponse()->debugging ) {
+				s214_debug_log_error( 'SMS Error', 'Failed to send the SMS message: <br />' . $result, 'EDD Clickatell Connect' );
+			}
 			return;
 		}
 	}

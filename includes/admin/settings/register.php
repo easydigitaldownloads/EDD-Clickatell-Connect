@@ -37,7 +37,7 @@ add_filter( 'edd_settings_sections_extensions', 'edd_clickatell_connect_add_sett
  */
 function edd_clickatell_connect_register_settings( $settings ) {
 	$new_settings = array(
-		'clickatell-connect' => array(
+		'clickatell-connect' => apply_filters( 'edd_clickatell_connect_settings', array(
 			array(
 				'id'   => 'edd_clickatell_connect_settings',
 				'name' => '<strong>' . __( 'Clickatell Connect Settings', 'edd-clickatell-connect' ) . '</strong>',
@@ -80,7 +80,7 @@ function edd_clickatell_connect_register_settings( $settings ) {
 				'desc' => __( 'Select whether or not you want itemized SMS notifications', 'edd-clickatell-connect' ),
 				'type' => 'checkbox'
 			)
-		)
+		) )
 	);
 
 	return array_merge( $settings, $new_settings );
@@ -88,6 +88,44 @@ function edd_clickatell_connect_register_settings( $settings ) {
 add_filter( 'edd_settings_extensions', 'edd_clickatell_connect_register_settings', 1 );
 
 
+/**
+ * Add debug option if the S214 Debug plugin is enabled
+ *
+ * @since       1.0.2
+ * @param       array $settings The current settings
+ * @return      array $settings The updated settings
+ */
+function edd_clickatell_connect_add_debug( $settings ) {
+	if( class_exists( 'S214_Debug' ) ) {
+		$debug_setting[] = array(
+			'id'   => 'edd_clickatell_connect_debugging',
+			'name' => '<strong>' . __( 'Debugging', 'edd-clickatell-connect' ) . '</strong>',
+			'desc' => '',
+			'type' => 'header'
+		);
+
+		$debug_setting[] = array(
+			'id'   => 'edd_clickatell_connect_enable_debug',
+			'name' => __( 'Enable Debug', 'edd-clickatell-connect' ),
+			'desc' => sprintf( __( 'Log plugin errors. You can view errors %s.', 'edd-clickatell-connect' ), '<a href="' . admin_url( 'tools.php?page=s214-debug-logs' ) . '">' . __( 'here', 'edd-clickatell-connect' ) . '</a>' ),
+			'type' => 'checkbox'
+		);
+
+		$settings = array_merge( $settings, $debug_setting );
+	}
+
+	return $settings;
+}
+add_filter( 'edd_clickatell_connect_settings', 'edd_clickatell_connect_add_debug' );
+
+
+/**
+ * Add license setting
+ *
+ * @since       1.0.1
+ * @param       array $settings The current settings
+ * @return      array $settings The updated settings
+ */
 function edd_clickatell_connect_register_license_settings( $settings ) {
 	$new_settings = array(
 		'edd_clickatell_connect_license' => array(
