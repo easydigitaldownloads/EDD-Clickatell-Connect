@@ -3,7 +3,7 @@
  * Plugin Name:     Easy Digital Downloads - Clickatell Connect
  * Plugin URI:      https://section214.com/product/edd-clickatell-connect/
  * Description:     Get real-time SMS notifications from Clickatell when you make sales!
- * Version:         1.0.2
+ * Version:         1.0.3
  * Author:          Daniel J Griffiths
  * Author URI:      https://section214.com
  * Text Domain:     edd-clickatell-connect
@@ -79,7 +79,7 @@ if( ! class_exists( 'EDD_Clickatell_Connect' ) ) {
 		 */
 		private function setup_constants() {
 			// Plugin version
-			define( 'EDD_CLICKATELL_CONNECT_VER', '1.0.2' );
+			define( 'EDD_CLICKATELL_CONNECT_VER', '1.0.3' );
 
 			// Plugin path
 			define( 'EDD_CLICKATELL_CONNECT_DIR', plugin_dir_path( __FILE__ ) );
@@ -177,15 +177,14 @@ if( ! class_exists( 'EDD_Clickatell_Connect' ) ) {
 function edd_clickatell_connect() {
 	if( ! class_exists( 'Easy_Digital_Downloads' ) ) {
 		if( ! class_exists( 'S214_EDD_Activation' ) ) {
-			require_once 'includes/class.s214-edd-activation.php';
+			require_once 'includes/library/class.s214-edd-activation.php';
 		}
 
 		$activation = new S214_EDD_Activation( plugin_dir_path( __FILE__ ), basename( __FILE__ ) );
 		$activation = $activation->run();
-
-		return EDD_Clickatell_Connect::instance();
-	} else {
-		return EDD_Clickatell_Connect::instance();
+		return;
 	}
+
+	return EDD_Clickatell_Connect::instance();
 }
 add_action( 'plugins_loaded', 'edd_clickatell_connect' );
